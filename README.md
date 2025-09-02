@@ -1,1 +1,1 @@
-
+To restore mysql databases use:          mysql -u root -p skytrail_database < skytrail_database.sql
