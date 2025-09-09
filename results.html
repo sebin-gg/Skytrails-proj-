@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Flights | SkyTrails</title>
+</head>
+<body>
+  <h2>Search Flights</h2>
+  <form id="searchForm">
+    <label>Trip Type<br>
+      <select name="trip_type" required>
+        <option value="round">Round Trip</option>
+        <option value="oneway">One Way</option>
+      </select>
+    </label><br>
+    <label>Class<br>
+      <select name="class" required>
+        <option value="economy">Economy</option>
+        <option value="business">Business</option>
+      </select>
+    </label><br>
+    <label>Departure<br>
+      <input type="text" name="departure" placeholder="Departure Location" required>
+    </label><br>
+    <label>Arrival<br>
+      <input type="text" name="arrival" placeholder="Arrival Location" required>
+    </label><br>
+    <label>Departure Date<br>
+      <input type="date" name="depart_date" required>
+    </label><br>
+    <label>Return Date<br>
+      <input type="date" name="return_date">
+    </label><br>
+    <button type="submit">Search Flights</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch('/flights/search', {  // assuming Sebin uses '/flights/search'
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const flights = await res.json();
+        localStorage.setItem('selectedFlights', JSON.stringify(flights));
+        window.location.href = 'passenger.html';
+      } catch(err){
+        console.error('Flight search error:', err);
+      }
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Passenger Details | SkyTrails</title>
+</head>
+<body>
+  <h2>Passenger Details</h2>
+  <form id="passengerForm">
+    <label>First Name<br>
+      <input type="text" name="first_name" placeholder="First Name" required>
+    </label><br>
+    <label>Last Name<br>
+      <input type="text" name="last_name" placeholder="Last Name" required>
+    </label><br>
+    <label>Date of Birth<br>
+      <input type="date" name="dob" required>
+    </label><br>
+    <label>Passport Number<br>
+      <input type="text" name="passport_number" placeholder="Passport Number">
+    </label><br>
+    <label>Nationality<br>
+      <input type="text" name="nationality" placeholder="Nationality">
+    </label><br>
+    <button type="submit">Continue to Payment</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('passengerForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('first_name') + ' ' + formData.get('last_name'),
+        Dob: formData.get('dob'),
+        Passportno: formData.get('passport_number')
+      };
+
+      try {
+        const res = await fetch('/passengers/add', {  // adjust to Sebin’s actual endpoint
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if(result.success){
+          window.location.href = 'confirmation.html';
+        } else {
+          alert(result.message);
+        }
+      } catch(err){
+        console.error('Passenger submission error:', err);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmation | SkyTrails</title>
+</head>
+<body>
+  <h2>Booking Confirmation</h2>
+  <p id="confirmationMessage">Your booking is confirmed. An e-ticket will be sent to your contact details.</p>
+  <a href="index.html">Back to Home</a>
+
+  <script>
+    // Assuming backend can provide booking details for the last passenger
+    async function loadConfirmation() {
+      try {
+        // Example: fetch using flight or passenger ID stored in localStorage
+        const passengerDetails = JSON.parse(localStorage.getItem('passengerDetails')) || {};
+        const res = await fetch('/confirmation', {
+          method: 'POST', // or GET if backend uses query params
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(passengerDetails)
+        });
+        const data = await res.json();
+
+        if(data.success){
+          document.getElementById('confirmationMessage').innerHTML =
+            `Booking Confirmed!<br>
+             Passenger: ${data.passengerName || passengerDetails.first_name + ' ' + passengerDetails.last_name}<br>
+             Flight: ${data.flightName || 'N/A'}<br>
+             E-ticket will be sent to ${data.email || passengerDetails.email || 'your email'}.`;
+        } else {
+          document.getElementById('confirmationMessage').innerText =
+            data.message || 'Booking confirmation failed.';
+        }
+      } catch(err){
+        console.error('Confirmation fetch error:', err);
+        document.getElementById('confirmationMessage').innerText =
+          'Something went wrong while fetching confirmation.';
+      }
+    }
+
+    loadConfirmation();
+  </script>
+</body>
+</html>
